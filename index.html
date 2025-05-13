@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Emergency Alert Analyzer</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- EmailJS SDK -->
+</head>
+<body>
+  <div class="wrapper">
+    <h1>Emergency Alert Analyzer</h1>
+    
+    <!-- Emergency input -->
+    <input type="text" id="emergency-input" placeholder="Enter your emergency..." />
+    
+    <!-- Checkboxes for recipients -->
+    <div id="recipient-selection">
+      <label><input type="checkbox" value="Parents" id="parents"> Parents</label><br>
+      <label><input type="checkbox" value="Students" id="students"> Students</label><br>
+      <label><input type="checkbox" value="Staff" id="staff"> Staff</label><br>
+    </div>
+    
+    <!-- Check severity button -->
+    <button id="check-button">Check Severity</button>
+    
+    <!-- Result display -->
+    <div id="result"></div>
+
+    <!-- Send Email Button -->
+    <button id="send-email-button" style="display:none;">Send Email</button>
+  </div>
+
+  <script src="script.js"></script>
+  <script type="text/javascript"
+        src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
+  </script>
+  <script type="text/javascript">
+    (function(){
+        emailjs.init({
+          publicKey: "kRykYADcPCXoqGPDO",
+        });
+    })();
+  </script>
+</body>
+</html>
