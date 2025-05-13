@@ -100,6 +100,34 @@
   #send-email-button:hover {
     background-color: #0056b3;
   }
+
+  textarea#additionalInfo {
+    width: 100%;
+    max-width: 500px;
+    min-height: 100px;
+    padding: 10px;
+    border: 1.5px solid #999;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    resize: vertical;
+    background-color: #fdfdfd;
+    transition: border-color 0.3s ease;
+  }
+  
+  textarea#additionalInfo:focus {
+    border-color: #007BFF;
+    outline: none;
+    box-shadow: 0 0 4px rgba(0, 123, 255, 0.3);
+  }
+
+  label[for="additionalInfo"] {
+    font-weight: bold;
+    display: block;
+    margin-top: 20px;
+    margin-bottom: 8px;
+    font-size: 1.1rem;
+  }
   
   /* Responsive design */
   @media (max-width: 480px) {
