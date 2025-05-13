@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const sendEmailButton = document.getElementById('send-email-button'); // Hidden button for sending email
   const recipientSelection = document.getElementById('recipient-selection');
 
+
   // Define preset emails for each recipient group
   const recipientEmailMap = {
     Parents: "technyctest@gmail.com",
@@ -18,26 +19,54 @@ document.addEventListener('DOMContentLoaded', function () {
   function categorizeEmergency(inputText) {
     const lowerInput = inputText.toLowerCase();
 
+    // Check for drill or test first
+    const drillTestKeywords = [
+      "drill", "test", "exercise", "rehearsal", "practice", "simulation", "fire drill", "earthquake drill", "active shooter drill"
+    ];
+
+    // Critical Keywords (life-threatening, immediate danger)
     const criticalKeywords = [
-      "shooter", "gun", "active shooter", "hostage", "explosion", "bomb", "fire", "chemical spill", "gas leak", "poison", 
-      "earthquake", "tsunami", "hurricane", "tornado", "flood", "wildfire", "terrorist", "school shooting", "suicide"
+      "shooter", "active shooter", "bomb", "explosion", "fire", "fireball", "smoke", "hazardous material", "chemical spill", "poison",
+      "gun", "earthquake", "tsunami", "hurricane", "tornado", "flood", "wildfire", "terrorist", "hostage", "kidnapping", "riots", 
+      "violence", "building collapse", "crash", "plane crash", "car accident", "gas leak", "hostage situation", "flooding", 
+      "school shooting", "emergency evacuation", "lockdown", "tsunami warning", "flood warning", "hurricane warning", "gas explosion",
+      "medical emergency", "heart attack", "stroke", "severe injury", "severe bleeding", "fire evacuation"
     ];
 
+    // Moderate Keywords (non-immediate, requires attention but not critical)
     const moderateKeywords = [
-      "fire drill", "evacuation", "first aid", "safety drill", "alarm", "construction", "staff meeting", "school assembly"
+      "fire drill", "earthquake drill", "shooter drill", "evacuation", "first aid", "safety drill", "alarm", "construction",
+      "workshop", "school evacuation", "lockdown drill", "school closure", "maintenance", "storm warning", "hazard", "road closure",
+      "traffic accident", "minor injury", "sick student", "weather alert", "building inspection", "shelter in place", "pest control",
+      "temporary evacuation", "medical checkup", "minor accident", "training session"
     ];
 
+    // Important Keywords (serious but not life-threatening)
     const importantKeywords = [
-      "escaped animal", "dangerous animal", "animal attack", "injured student", "sports injury", "burns", "allergic reaction"
+      "tiger", "lion", "animal", "escaped animal", "wild animal", "dangerous animal", "bear", "shark", "snake", "pest infestation",
+      "dog attack", "school fight", "aggressive student", "mental health issue", "injury", "fall", "collapsed ceiling", "leak",
+      "collapsed building", "injured person", "broken arm", "bleeding", "medical emergency", "heat exhaustion", "fainting", "high fever",
+      "panic attack", "behavioral issue", "physical altercation", "dangerous crowd", "falling debris", "unsafe conditions",
+      "stray animal", "animal sighting", "dangerous situation"
     ];
 
+    // Not Important Keywords (routine or trivial situations)
     const notImportantKeywords = [
-      "game", "party", "field trip", "birthday", "homework", "quiz", "test"
+      "game", "party", "class", "test", "homework", "field trip", "recess", "lunch break", "assembly", "meeting", "schedule change",
+      "project", "vacation", "birthday", "holiday", "staff meeting", "presentation", "non-urgent", "play", "textbook", "book report",
+      "school supply", "field day", "pop quiz", "announcement", "guest speaker", "relocation", "sick day", "exams", "quiz"
     ];
+
+    // First check for "drill" or "test" to prevent them being classified as critical
+    for (let keyword of drillTestKeywords) {
+      if (lowerInput.includes(keyword)) {
+        return "Moderate";
+      }
+    }
 
     // Check if the input matches any of the Critical keywords
     for (let keyword of criticalKeywords) {
-      if (lowerInput.includes(keyword)) {
+      if (lowerInput.includes(keyword) && !lowerInput.includes("drill") && !lowerInput.includes("test")) {
         return "Critical";
       }
     }
@@ -63,6 +92,7 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     }
 
+    // If no match, return Uncertain
     return "Uncertain";
   }
 
@@ -93,7 +123,7 @@ document.addEventListener('DOMContentLoaded', function () {
       }
 
       // Show the send email button only for critical or important emergencies
-      if (severity === "Critical" || severity === "Important") {
+      if (severity === "Critical" || severity === "Important" || severity === "Moderate") {
         sendEmailButton.style.display = 'block';
       } else {
         sendEmailButton.style.display = 'none';
@@ -117,11 +147,14 @@ document.addEventListener('DOMContentLoaded', function () {
       .map(role => recipientEmailMap[role])
       .join(",");
 
+    const additionalInfo = document.getElementById("additionalInfo").value.trim();
+    
     // Prepare email data
     const emailData = {
       SEVERITY: severity,
       email: recipientEmails,
       EMERGENCY: input.value.trim(),
+      OTHER_INFO: additionalInfo
     };
 
     // Send email using EmailJS
